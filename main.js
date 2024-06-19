@@ -21,49 +21,51 @@ export const fn = (a, b, c) => {
       throw new Error("El número de empanadas no puede pasar de 40.");
    }
 
-
-   // Lista de precios de cada tipo de empanada. Se crea un array con los 
-   // precios de cada empanada.
-   const preciosEmpanadas = [
-      ...Array(a).fill(12), // Array vacío con `a` posiciones, y se llena con valor 12.
-      ...Array(b).fill(14), //Array vacío con `b` posiciones, y se llena con valor 14.
-      ...Array(c).fill(16) //Array vacío con `c` posiciones, y se llena con valor 16.
-   ];
-
-   // Cálculo de la media de los precios, creando un array vacío para integrar
-   // las medias de los precios.
-   const mediaEmpanadas = [];
-
-   // Ejecutamos while mientras preciosEmpanadas tenga más de un elemento.
-   while (preciosEmpanadas.length > 1) {
-
-      // Si preciosEmpanadas tienen más de un elemento, se calcula su media
-      // y se añaden dos veces a mediaEmpanadas.
-      const primerPrecio = preciosEmpanadas.shift(); // Elimina y devuelve el primer elemento.
-      const ultimoPrecio = preciosEmpanadas.pop(); // Elimina y retorna el último elemento.
-      const mediaPrecio = (primerPrecio + ultimoPrecio) / 2;
-      mediaEmpanadas.push(mediaPrecio, mediaPrecio);
+   // Inicializar los precios de las empanadas
+   let valorEmpanadas = '';
+   
+   for (let i = 0; i < a; i++) valorEmpanadas += '12,';
+   for (let i = 0; i < b; i++) valorEmpanadas += '14,';
+   for (let i = 0; i < c; i++) valorEmpanadas += '16,';
+   
+   valorEmpanadas = valorEmpanadas.slice(0, -1);
+   
+   // Convertir la cadena en una lista de números
+   valorEmpanadas = valorEmpanadas.split(',').map(Number);
+   
+   // Cálculo de la media de los precios
+   let mediaEmpanadas = '';
+   
+   while (valorEmpanadas.length > 1) {
+      const valorInicial = valorEmpanadas.shift(); // Elimina y devuelve el primer elemento.
+      const valorFinal = valorEmpanadas.pop(); // Elimina y retorna el último elemento.
+      const valorMedio = (valorInicial + valorFinal) / 2;
+      mediaEmpanadas += `${valorMedio},${valorMedio},`;
    }
 
    // Caso especial. Si quedara un elemento después de while, se añade a mediaEmpanadas.
-   if (preciosEmpanadas.length === 1) {
-      mediaEmpanadas.push(preciosEmpanadas.pop());
+   if (valorEmpanadas.length === 1) {
+      mediaEmpanadas += `${valorEmpanadas.pop()},`;
    }
 
+   mediaEmpanadas = mediaEmpanadas.slice(0, -1);
+   
+   // Convertir la cadena en una lista de números
+   mediaEmpanadas = mediaEmpanadas.split(',').map(Number);
+   
    // Ordenar las medias en orden descendente utilizando sort.
    mediaEmpanadas.sort((a, b) => b - a);
    console.log(mediaEmpanadas);
 
-   // Calcular el precio total sumando cada tercer elemento, utilizando 
-   // reduce para sumar los precios de mediaEmpanadas
-   const precioTotal = mediaEmpanadas.reduce((total, precio, index) => {
-      // Los índices son múltiplos de 3, empezando por un total de 0.
-      return (index % 3 === 0)
-      ? total + precio
-      : total;
-   }, 0);
+   // Calcular el precio total sumando cada tercer elemento
+   let valorTotal = 0;
+   for (let i = 0; i < mediaEmpanadas.length; i++) {
+      if (i % 3 === 0) {
+         valorTotal += mediaEmpanadas[i];
+      }
+   }
 
-   //Por último, se obtiene el precioTotal.
-   console.log(precioTotal);
-   return precioTotal;
+   // Por último, se obtiene el precioTotal.
+   console.log(valorTotal);
+   return valorTotal;
 };
